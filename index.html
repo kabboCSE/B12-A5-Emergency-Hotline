@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>জরুরি সেবা ডিরেক্টরি</title>
+    <link rel="shortcut icon" href="./assets/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/style/style.css">
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
@@ -67,7 +69,8 @@
             margin-top: 24px;
             margin-left: 20px;
             margin-right: 20px;
-            align-items: stretch;
+            align-items: start;
+            min-height: calc(100vh - 200px);
         }
 
         @media (min-width: 1024px) {
@@ -75,7 +78,8 @@
                 grid-template-columns: 1fr 320px;
                 margin-left: 40px;
                 margin-right: 40px;
-                align-items: stretch;
+                align-items: start;
+                min-height: calc(100vh - 200px);
             }
         }
 
@@ -126,16 +130,16 @@
             background: white;
             border-top: 1px solid rgb(229 231 235);
             padding: 16px;
+            min-height: calc(100vh - 200px);
             height: 100%;
-            min-height: 100%;
         }
 
         @media (min-width: 1024px) {
             .sidebar {
                 border-top: none;
                 border-left: 1px solid rgb(229 231 235);
+                min-height: calc(100vh - 200px);
                 height: 100%;
-                min-height: 100%;
             }
         }
 
@@ -159,12 +163,20 @@
             grid-template-columns: 1fr auto;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgb(243 244 246);
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid rgb(243 244 246);
+            transition: background-color 0.2s;
+        }
+
+        .history-item:hover {
+            background: #f1f5f9;
         }
 
         .history-item:last-child {
-            border-bottom: none;
+            margin-bottom: 0;
         }
 
         .bottom-stats {
@@ -177,30 +189,61 @@
             font-size: 14px;
             color: rgb(75 85 99);
         }
+
+        .call-history-container {
+            min-height: calc(100vh - 300px);
+            overflow-y: auto;
+            padding: 4px 0;
+        }
+
+        .clear-btn {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #d1d5db;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .clear-btn:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+
+        .clear-btn:active {
+            background: #d1d5db;
+            transform: translateY(1px);
+        }
     </style>
 </head>
 
-<body class="bg-gray-50 font-sans">
+<body class=" font-sans bg-[#41FF6B1A]">
     <!-- Top Navigation -->
     <div class="top-nav">
         <div class="nav-brand">
             <div class="w-8 h-8 flex items-center justify-center">
-                <i class="fas fa-phone-alt text-green-600 text-xl"></i>
+                <img src="./assets/logo.png" alt="">
             </div>
-            <span class="text-green-700 font-medium">Emergency <br>Service</span>
+            <span class="text-green-700 font-bold">
+                <h1> Emergency <br>Service</h1>
+            </span>
         </div>
         <div></div>
         <div class="nav-stats">
-            <div class="stat-item heart-stat">
+            <div class="stat-item heart-stat font-bold">
                 <span id="heartCount">0</span>
-                <i class="fas fa-heart"></i>
+                <img src="./assets/heart.png" alt="" class="w-7">
             </div>
-            <div class="stat-item coin-stat">
+            <div class="stat-item bg-[#41FF6B1A] font-bold">
                 <span id="coinCount">100</span>
-                <i class="fas fa-coins"></i>
+                <img src="./assets/coin.png" alt="" class="w-7">
             </div>
-            <div class="stat-item copy-stat">
-                <span id="copyCount">2</span>
+            <div
+                class="flex items-center gap-[6px] px-3 py-2 rounded-[20px] font-medium text-sm bg-emerald-500 text-white">
+                <span id="copyCount">0</span>
                 <span>Copy</span>
             </div>
         </div>
@@ -209,25 +252,27 @@
     <!-- Header Section -->
     <div class="gradient-bg text-white py-12 px-4 text-center">
         <div class="w-20 h-20 bg-red-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-            <i class="fas fa-ambulance text-white text-2xl"></i>
+            <img src="./assets/logo.png" alt="">
         </div>
         <h1 class="text-3xl font-bold mb-4">জরুরি সেবা ডিরেক্টরি</h1>
         <p class="text-lg opacity-90">Government Emergency Services at Your Fingertip – A Project by Government of the
             People's Republic of Bangladesh</p>
     </div>
 
-    <div class="main-layout">
+    <div class="main-layout ">
         <!-- Main Content -->
-        <div class="p-4 h-full">
+        <div class="p-4 min-h-full">
             <!-- Service Cards Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 <!-- National Emergency -->
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-exclamation-triangle text-red-500"></i>
+                            <!-- <i class="fas fa-exclamation-triangle text-red-500"></i> -->
+                            <img src="./assets/emergency.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
+
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn"
                             data-service="জাতীয় জরুরি সেবা"></i>
                     </div>
@@ -256,7 +301,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-shield-alt text-blue-500"></i>
+                            <img src="./assets/police.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn" data-service="পুলিশ"></i>
@@ -264,7 +309,7 @@
                     <div>
                         <h3 class="font-bold text-gray-800">পুলিশ</h3>
                         <p class="text-sm text-gray-600 mb-2">Police</p>
-                        <p class="text-2xl font-bold text-gray-900 mb-1">100</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">999</p>
                         <div class="inline-block px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full mb-4">পুলিশ
                         </div>
                     </div>
@@ -286,7 +331,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-fire text-red-500"></i>
+                            <img src="./assets/fire-service.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn"
@@ -295,7 +340,7 @@
                     <div>
                         <h3 class="font-bold text-gray-800">ফায়ার সার্ভিস</h3>
                         <p class="text-sm text-gray-600 mb-2">Fire Service</p>
-                        <p class="text-2xl font-bold text-gray-900 mb-1">199</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">999</p>
                         <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">ফায়ার
                         </div>
                     </div>
@@ -317,7 +362,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-ambulance text-green-500"></i>
+                            <img src="./assets/ambulance.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn" data-service="অ্যাম্বুলেন্স"></i>
@@ -334,6 +379,7 @@
                             data-number="1994-999999">
                             <i class="far fa-copy"></i>
                             <span>Copy</span>
+
                         </button>
                         <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
                             data-service="অ্যাম্বুলেন্স" data-number="1994-999999">
@@ -347,7 +393,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-female text-pink-500"></i>
+                            <img src="./assets/emergency.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn"
@@ -378,7 +424,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-balance-scale text-red-500"></i>
+                            <img src="./assets/emergency.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn" data-service="দুদক"></i>
@@ -408,7 +454,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-bolt text-red-500"></i>
+                            <img src="./assets/emergency.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn"
@@ -439,7 +485,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-hands-helping text-red-500"></i>
+                            <img src="./assets/emergency.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn" data-service="ব্রাক"></i>
@@ -448,7 +494,7 @@
                         <h3 class="font-bold text-gray-800">ব্রাক</h3>
                         <p class="text-sm text-gray-600 mb-2">Brac</p>
                         <p class="text-2xl font-bold text-gray-900 mb-1">16445</p>
-                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">জরুরিত
+                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">এনজিও
                         </div>
                     </div>
                     <div class="card-actions">
@@ -469,7 +515,7 @@
                 <div class="service-card">
                     <div class="card-header">
                         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-train text-red-500"></i>
+                            <img src="./assets/emergency.png" alt="" class="w-7 flex items-center justify-center">
                         </div>
                         <div></div>
                         <i class="far fa-heart text-gray-400 cursor-pointer heart-btn"
@@ -499,20 +545,22 @@
         </div>
 
         <!-- Call History Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar my-4 h-8 rounded-2xl">
             <div class="sidebar-header">
                 <div class="sidebar-header-left">
                     <i class="fas fa-history text-gray-500"></i>
                     <span class="font-medium text-gray-800">Call History</span>
                 </div>
                 <div></div>
-                <button class="bg-red-500 text-white px-3 py-1 rounded text-sm font-medium hover:bg-red-600"
+                <button
+                    class="clear-btn flex items-center gap-[6px] px-3 py-2 rounded-[20px] font-medium text-sm bg-emerald-500 text-white"
                     id="clearHistoryBtn">
-                    <i class="fas fa-trash mr-1"></i> Clear
+                    <i class="fas fa-trash-alt mr-1"></i> Clear
                 </button>
+
             </div>
             <!-- Call history will be populated here dynamically -->
-            <div id="callHistoryList" class="space-y-3">
+            <div id="callHistoryList" class="call-history-container">
                 <div class="text-center text-gray-500 py-8" id="emptyHistoryMessage">
 
                 </div>
@@ -524,7 +572,7 @@
         // Initialize counters
         let heartCount = 0;
         let coinCount = 100;
-        let copyCount = 2;
+        let copyCount = 0;
         let callHistory = [];
 
         // Update counter displays
