@@ -6,388 +6,635 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>জরুরি সেবা ডিরেক্টরি</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary-green': '#006747',
-                        'light-green': '#00A63E',
-                        'bg-green': '#41ff6b1a'
-                    }
-                }
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+        }
+
+        .top-nav {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .nav-brand {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            align-items: center;
+        }
+
+        .stat-item {
+            display: grid;
+            grid-template-columns: auto auto;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        @media (min-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr 320px;
             }
         }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        body {
-            font-family: 'Inter', sans-serif;
+        .service-card {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border: 1px solid rgb(229 231 235);
+            transition: box-shadow 0.2s;
         }
 
-        .card-shadow {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        .service-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .card-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .card-button {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar {
+            background: white;
+            border-top: 1px solid rgb(229 231 235);
+            padding: 16px;
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                border-top: none;
+                border-left: 1px solid rgb(229 231 235);
+            }
+        }
+
+        .sidebar-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header-left {
+            display: grid;
+            grid-template-columns: auto auto;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgb(243 244 246);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .bottom-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid rgb(229 231 235);
+            font-size: 14px;
+            color: rgb(75 85 99);
         }
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 font-sans">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-brand">
+            <div class="w-8 h-8 flex items-center justify-center">
+                <i class="fas fa-phone-alt text-green-600 text-xl"></i>
+            </div>
+            <span class="text-green-700 font-medium">Emergency <br>Service</span>
+        </div>
+        <div></div>
+        <div class="nav-stats">
+            <div class="stat-item">
+                <i class="fas fa-heart text-red-500"></i>
+                <span class="text-sm" id="heartCount">0</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-coins text-yellow-500"></i>
+                <span class="text-sm" id="coinCount">100</span>
+            </div>
+            <div class="stat-item">
+                <i class="far fa-copy text-blue-500"></i>
+                <span class="text-sm" id="copyCount">2</span>
+            </div>
+        </div>
+    </div>
 
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="max-w-md mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-primary-green rounded-full flex items-center justify-center">
-                        <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">৯৯৯</span>
+    <!-- Header Section -->
+    <div class="gradient-bg text-white py-12 px-4 text-center">
+        <div class="w-20 h-20 bg-red-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+            <i class="fas fa-ambulance text-white text-2xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold mb-4">জরুরি সেবা ডিরেক্টরি</h1>
+        <p class="text-lg opacity-90">Government Emergency Services at Your Fingertip – A Project by Government of the
+            People's Republic of Bangladesh</p>
+    </div>
+
+    <div class="main-layout">
+        <!-- Main Content -->
+        <div class="p-4">
+            <!-- Service Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <!-- National Emergency -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-red-500"></i>
                         </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="জাতীয় জরুরি সেবা"></i>
                     </div>
                     <div>
-                        <h1 class="text-primary-green font-semibold text-sm leading-tight">Emergency</h1>
-                        <h1 class="text-primary-green font-semibold text-sm leading-tight">Service</h1>
+                        <h3 class="font-bold text-gray-800">জাতীয় জরুরি সেবা</h3>
+                        <p class="text-sm text-gray-600 mb-2">National Emergency</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">999</p>
+                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">সার্বজনীন
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="999">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="National Emergency" data-number="999">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <div class="flex items-center gap-1 bg-bg-green px-3 py-2 rounded-lg">
-                        <span class="text-sm">0</span>
-                        <div class="w-4 h-4 bg-red-500 rounded-sm"></div>
+                <!-- Police -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-blue-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="পুলিশ"></i>
                     </div>
-                    <div class="flex items-center gap-1 bg-bg-green px-3 py-2 rounded-lg">
-                        <span class="text-sm">100</span>
-                        <div class="w-4 h-4 bg-yellow-400 rounded-full"></div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">পুলিশ</h3>
+                        <p class="text-sm text-gray-600 mb-2">Police</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">100</p>
+                        <div class="inline-block px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full mb-4">পুলিশ
+                        </div>
                     </div>
-                    <div class="bg-light-green text-white px-4 py-2 rounded-lg">
-                        <span class="text-sm font-medium">2 Copy</span>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="100">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="পুলিশ" data-number="100">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Fire Service -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-fire text-red-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="ফায়ার সার্ভিস"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">ফায়ার সার্ভিস</h3>
+                        <p class="text-sm text-gray-600 mb-2">Fire Service</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">199</p>
+                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">ফায়ার
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="199">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="ফায়ার সার্ভিস" data-number="199">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ambulance -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-ambulance text-green-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="অ্যাম্বুলেন্স"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">অ্যাম্বুলেন্স</h3>
+                        <p class="text-sm text-gray-600 mb-2">Ambulance</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">1994-999999</p>
+                        <div class="inline-block px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full mb-4">
+                            স্বাস্থ্য</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="1994-999999">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="অ্যাম্বুলেন্স" data-number="1994-999999">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Women & Child Helpline -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-female text-pink-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="নারী ও শিশু সহায়তা"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">নারী ও শিশু সহায়তা</h3>
+                        <p class="text-sm text-gray-600 mb-2">Women & Child Helpline</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">109</p>
+                        <div class="inline-block px-2 py-1 bg-pink-100 text-pink-600 text-xs rounded-full mb-4">সহায়তা
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="109">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="নারী ও শিশু সহায়তা" data-number="109">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Anti-Corruption -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-balance-scale text-red-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="দুদক"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">দুদক</h3>
+                        <p class="text-sm text-gray-600 mb-2">Anti-Corruption</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">106</p>
+                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">সরকারি
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="106">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="দুদক" data-number="106">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Electricity Outage -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-bolt text-red-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="বিদ্যুৎ রিপোর্ট"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">বিদ্যুৎ রিপোর্ট</h3>
+                        <p class="text-sm text-gray-600 mb-2">Electricity Outage</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">16216</p>
+                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">বিদ্যুৎ
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="16216">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="বিদ্যুৎ রিপোর্ট" data-number="16216">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BRAC -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-hands-helping text-red-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="ব্রাক"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">ব্রাক</h3>
+                        <p class="text-sm text-gray-600 mb-2">Brac</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">16445</p>
+                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">জরুরিত
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="16445">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="ব্রাক" data-number="16445">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bangladesh Railway -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-train text-red-500"></i>
+                        </div>
+                        <div></div>
+                        <i class="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer heart-btn transition-colors"
+                            data-service="বাংলাদেশ রেলওয়ে"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">বাংলাদেশ রেলওয়ে</h3>
+                        <p class="text-sm text-gray-600 mb-2">Bangladesh Railway</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-1">163</p>
+                        <div class="inline-block px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full mb-4">পরিবহন
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-button border border-gray-300 text-gray-700 hover:bg-gray-50 copy-btn"
+                            data-number="163">
+                            <i class="far fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="card-button bg-green-500 text-white hover:bg-green-600 call-btn"
+                            data-service="বাংলাদেশ রেলওয়ে" data-number="163">
+                            <i class="fas fa-phone"></i>
+                            <span>Call</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="bg-primary-green text-white py-8">
-        <div class="max-w-md mx-auto px-4 text-center">
-            <div class="w-16 h-16 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
-                <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold">৯৯৯</span>
+        <!-- Call History Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-header-left">
+                    <i class="fas fa-history text-gray-500"></i>
+                    <span class="font-medium text-gray-800">Call History</span>
                 </div>
-            </div>
-            <h2 class="text-lg font-semibold mb-2">জরুরি সেবা ডিরেক্টরি</h2>
-            <p class="text-sm opacity-90">Government Emergency Services at Your Fingertip – A Project by Government of
-                the People's Republic of Bangladesh</p>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="max-w-md mx-auto px-4 py-6">
-
-        <!-- Emergency Services Grid -->
-        <div class="grid grid-cols-1 gap-4 mb-6">
-
-            <!-- National Emergency -->
-            <div class="bg-white rounded-xl p-4 card-shadow">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                            <div class="w-6 h-6 bg-red-500 rounded"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">জাতীয় জরুরি সেবা</h3>
-                            <p class="text-sm text-gray-500">National Emergency</p>
-                        </div>
-                    </div>
-                    <button class="w-6 h-6 text-gray-400">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mb-4">
-                    <div class="text-2xl font-bold text-gray-900 mb-1">999</div>
-                    <div class="text-sm text-gray-500">সার্বজনীন</div>
-                </div>
-                <div class="flex gap-3">
-                    <button
-                        class="flex-1 border border-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium">
-                        📋 Copy
-                    </button>
-                    <button class="flex-1 bg-light-green text-white py-2 px-4 rounded-lg text-sm font-medium">
-                        📞 Call
-                    </button>
-                </div>
-            </div>
-
-            <!-- Police -->
-            <div class="bg-white rounded-xl p-4 card-shadow">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <div class="w-6 h-6 bg-blue-500 rounded"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">পুলিশ</h3>
-                            <p class="text-sm text-gray-500">Police</p>
-                        </div>
-                    </div>
-                    <button class="w-6 h-6 text-gray-400">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mb-4">
-                    <div class="text-2xl font-bold text-gray-900 mb-1">999</div>
-                    <div class="text-sm text-gray-500">পুলিশ</div>
-                </div>
-                <div class="flex gap-3">
-                    <button
-                        class="flex-1 border border-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium">
-                        📋 Copy
-                    </button>
-                    <button class="flex-1 bg-light-green text-white py-2 px-4 rounded-lg text-sm font-medium">
-                        📞 Call
-                    </button>
-                </div>
-            </div>
-
-            <!-- Fire Service -->
-            <div class="bg-white rounded-xl p-4 card-shadow">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <div class="w-6 h-6 bg-orange-500 rounded"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">ফায়ার সার্ভিস</h3>
-                            <p class="text-sm text-gray-500">Fire Service</p>
-                        </div>
-                    </div>
-                    <button class="w-6 h-6 text-gray-400">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mb-4">
-                    <div class="text-2xl font-bold text-gray-900 mb-1">999</div>
-                    <div class="text-sm text-gray-500">ফায়ার</div>
-                </div>
-                <div class="flex gap-3">
-                    <button
-                        class="flex-1 border border-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium">
-                        📋 Copy
-                    </button>
-                    <button class="flex-1 bg-light-green text-white py-2 px-4 rounded-lg text-sm font-medium">
-                        📞 Call
-                    </button>
-                </div>
-            </div>
-
-            <!-- Ambulance -->
-            <div class="bg-white rounded-xl p-4 card-shadow">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <div class="w-6 h-6 bg-green-500 rounded"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">অ্যাম্বুলেন্স</h3>
-                            <p class="text-sm text-gray-500">Ambulance</p>
-                        </div>
-                    </div>
-                    <button class="w-6 h-6 text-gray-400">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mb-4">
-                    <div class="text-2xl font-bold text-gray-900 mb-1">1994-999999</div>
-                    <div class="text-sm text-gray-500">স্বাস্থ্য</div>
-                </div>
-                <div class="flex gap-3">
-                    <button
-                        class="flex-1 border border-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium">
-                        📋 Copy
-                    </button>
-                    <button class="flex-1 bg-light-green text-white py-2 px-4 rounded-lg text-sm font-medium">
-                        📞 Call
-                    </button>
-                </div>
-            </div>
-
-            <!-- Women & Child Helpline -->
-            <div class="bg-white rounded-xl p-4 card-shadow">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
-                            <div class="w-6 h-6 bg-pink-500 rounded"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">নারী ও শিশু সহায়তা</h3>
-                            <p class="text-sm text-gray-500">Women & Child Helpline</p>
-                        </div>
-                    </div>
-                    <button class="w-6 h-6 text-gray-400">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mb-4">
-                    <div class="text-2xl font-bold text-gray-900 mb-1">109</div>
-                    <div class="text-sm text-gray-500">সহায়তা</div>
-                </div>
-                <div class="flex gap-3">
-                    <button
-                        class="flex-1 border border-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium">
-                        📋 Copy
-                    </button>
-                    <button class="flex-1 bg-light-green text-white py-2 px-4 rounded-lg text-sm font-medium">
-                        📞 Call
-                    </button>
-                </div>
-            </div>
-
-            <!-- Anti-Corruption -->
-            <div class="bg-white rounded-xl p-4 card-shadow">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <div class="w-6 h-6 bg-purple-500 rounded"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">দুদক</h3>
-                            <p class="text-sm text-gray-500">Anti-Corruption</p>
-                        </div>
-                    </div>
-                    <button class="w-6 h-6 text-gray-400">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="mb-4">
-                    <div class="text-2xl font-bold text-gray-900 mb-1">106</div>
-                    <div class="text-sm text-gray-500">সরকারি</div>
-                </div>
-                <div class="flex gap-3">
-                    <button
-                        class="flex-1 border border-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium">
-                        📋 Copy
-                    </button>
-                    <button class="flex-1 bg-light-green text-white py-2 px-4 rounded-lg text-sm font-medium">
-                        📞 Call
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Call History Section -->
-        <div class="bg-white rounded-xl p-4 card-shadow">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                        <span class="text-lg">🕐</span>
-                    </div>
-                    <h3 class="font-semibold text-gray-900">Call History</h3>
-                </div>
-                <button class="bg-light-green text-white px-3 py-1 rounded-lg text-sm">
-                    Clear
+                <div></div>
+                <button class="bg-red-500 text-white px-3 py-1 rounded text-sm font-medium hover:bg-red-600"
+                    id="clearHistoryBtn">
+                    <i class="fas fa-trash mr-1"></i> Clear
                 </button>
             </div>
+            <!-- Call history will be populated here dynamically -->
+            <div id="callHistoryList" class="space-y-3">
+                <div class="text-center text-gray-500 py-8" id="emptyHistoryMessage">
 
-            <div class="space-y-3">
-                <!-- Call History Items -->
-                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                    <div>
-                        <p class="font-medium text-gray-900 text-sm">জাতীয় জরুরি সেবা</p>
-                        <p class="text-xs text-gray-500">999</p>
-                    </div>
-                    <span class="text-xs text-gray-400">11:36:58 AM</span>
-                </div>
-
-                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                    <div>
-                        <p class="font-medium text-gray-900 text-sm">অ্যাম্বুলেন্স</p>
-                        <p class="text-xs text-gray-500">1994-999999</p>
-                    </div>
-                    <span class="text-xs text-gray-400">11:36:58 AM</span>
-                </div>
-
-                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                    <div>
-                        <p class="font-medium text-gray-900 text-sm">পুলিশ</p>
-                        <p class="text-xs text-gray-500">999</p>
-                    </div>
-                    <span class="text-xs text-gray-400">11:36:58 AM</span>
                 </div>
             </div>
         </div>
-
-    </main>
+    </div>
 
     <script>
-        // Add functionality for copy buttons
-        document.querySelectorAll('button').forEach(button => {
-            if (button.textContent.includes('Copy')) {
-                button.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const card = this.closest('.bg-white');
-                    const phoneNumber = card.querySelector('.text-2xl').textContent;
+        // Initialize counters
+        let heartCount = 0;
+        let coinCount = 100;
+        let copyCount = 2;
+        let callHistory = [];
+
+        // Update counter displays
+        function updateCounters() {
+            document.getElementById('heartCount').textContent = heartCount;
+            document.getElementById('coinCount').textContent = coinCount;
+            document.getElementById('copyCount').textContent = copyCount;
+        }
+
+        // Format current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+        }
+
+        // Update call history display
+        function updateCallHistory() {
+            const historyList = document.getElementById('callHistoryList');
+
+            if (callHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="text-center text-gray-500 py-8" id="emptyHistoryMessage">
+                        
+                    </div>
+                `;
+            } else {
+                historyList.innerHTML = callHistory.map(call => `
+                    <div class="history-item">
+                        <div>
+                            <p class="font-medium text-gray-800">${call.service}</p>
+                            <p class="text-sm text-gray-600">${call.number}</p>
+                        </div>
+                        <span class="text-xs text-gray-500">${call.time}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle heart button clicks
+            document.querySelectorAll('.heart-btn').forEach(heart => {
+                heart.addEventListener('click', function () {
+                    const service = this.getAttribute('data-service');
+
+                    // Toggle heart visual state
+                    this.classList.toggle('far');
+                    this.classList.toggle('fas');
+                    this.classList.toggle('text-gray-400');
+                    this.classList.toggle('text-red-500');
+
+                    // Increase heart count
+                    if (this.classList.contains('fas')) {
+                        heartCount++;
+                    } else {
+                        heartCount = Math.max(0, heartCount - 1);
+                    }
+
+                    updateCounters();
+                });
+            });
+
+            // Handle copy buttons
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const phoneNumber = this.getAttribute('data-number');
 
                     // Copy to clipboard
                     navigator.clipboard.writeText(phoneNumber).then(() => {
-                        // Show feedback
-                        const originalText = this.innerHTML;
-                        this.innerHTML = '✓ Copied';
-                        this.classList.add('bg-green-100', 'text-green-700');
+                        // Visual feedback
+                        const originalHTML = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
+                        this.classList.add('bg-green-100', 'text-green-600');
 
                         setTimeout(() => {
-                            this.innerHTML = originalText;
-                            this.classList.remove('bg-green-100', 'text-green-700');
+                            this.innerHTML = originalHTML;
+                            this.classList.remove('bg-green-100', 'text-green-600');
                         }, 2000);
+
+                        // Increase copy count
+                        copyCount++;
+                        updateCounters();
+                    }).catch(err => {
+                        alert('Failed to copy number');
                     });
                 });
-            }
+            });
 
-            if (button.textContent.includes('Call')) {
-                button.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const card = this.closest('.bg-white');
-                    const phoneNumber = card.querySelector('.text-2xl').textContent;
+            // Handle call buttons
+            document.querySelectorAll('.call-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const service = this.getAttribute('data-service');
+                    const number = this.getAttribute('data-number');
 
-                    // Simulate call (in real app, this would use tel: protocol)
-                    window.location.href = `tel:${phoneNumber}`;
+                    // Check if user has enough coins
+                    if (coinCount < 20) {
+                        alert('❌ আপনার পর্যাপ্ত কয়েন নেই! কল করতে কমপক্ষে ২০ কয়েন লাগবে।');
+                        return;
+                    }
+
+                    // Show call alert
+                    if (confirm(`📞 Calling ${service} ${number}.... `)) {
+                        // Deduct coins
+                        coinCount -= 20;
+                        updateCounters();
+
+                        // Add to call history
+                        callHistory.push({
+                            service: service,
+                            number: number,
+                            time: getCurrentTime()
+                        });
+                        updateCallHistory();
+                    }
                 });
-            }
-        });
+            });
 
-        // Add heart button functionality
-        document.querySelectorAll('svg').forEach(heart => {
-            heart.parentElement.addEventListener('click', function (e) {
-                e.preventDefault();
-                if (this.classList.contains('text-gray-400')) {
-                    this.classList.remove('text-gray-400');
-                    this.classList.add('text-red-500');
-                } else {
-                    this.classList.remove('text-red-500');
-                    this.classList.add('text-gray-400');
+            // Handle clear history button
+            document.getElementById('clearHistoryBtn').addEventListener('click', function () {
+                if (confirm('Are you sure you want to clear all call history?')) {
+                    callHistory = [];
+                    updateCallHistory();
+                    alert('✅ Call history cleared successfully!');
                 }
             });
+
+            // Initialize display
+            updateCounters();
+            updateCallHistory();
         });
     </script>
-
 </body>
 
 </html>

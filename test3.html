@@ -4,19 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>জরুরি সেবা ডিরেক্টরি - Emergency Services Directory</title>
+    <title>জরুরি সেবা ডিরেক্টরি</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="./assets/logo.png" type="image/x-icon">
 </head>
 
 <body class="bg-gray-50 font-sans">
     <!-- Top Navigation -->
     <div class="bg-white px-4 py-3 flex items-center justify-between shadow-sm">
         <div class="flex items-center">
-            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center mr-3">
-                <i class="fas fa-plus text-white text-sm"></i>
+            <div class="w-8 h-8 flex items-center justify-center mr-3">
+                <img src="./assets/logo.png" alt="">
             </div>
-            <span class="text-green-700 font-medium">Emergency Service</span>
+            <span class="text-green-700 font-medium">Emergency <br>
+                Service</span>
         </div>
         <div class="flex items-center space-x-4">
             <div class="flex items-center">
@@ -339,7 +341,8 @@
         </div>
     </div>
 
-    <script>
+    <!-- <script>
+
         // Add functionality to buttons
         document.addEventListener('DOMContentLoaded', function () {
             // Handle copy buttons
@@ -381,7 +384,162 @@
                 });
             });
         });
+    </script> -->
+
+    <script>
+        // Initialize counters
+        let heartCount = 0;
+        let coinCount = 100;
+        let copyCount = 2;
+        let callHistory = [];
+
+        // Update counter displays
+        function updateCounters() {
+            document.getElementById('heartCount').textContent = heartCount;
+            document.getElementById('coinCount').textContent = coinCount;
+            document.getElementById('copyCount').textContent = copyCount;
+            document.getElementById('heartCountBottom').textContent = heartCount;
+            document.getElementById('coinCountBottom').textContent = coinCount;
+            document.getElementById('copyCountBottom').textContent = copyCount;
+        }
+
+        // Format current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+        }
+
+        // Update call history display
+        function updateCallHistory() {
+            const historyList = document.getElementById('callHistoryList');
+            const emptyMessage = document.getElementById('emptyHistoryMessage');
+
+            if (callHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="text-center text-gray-500 py-8" id="emptyHistoryMessage">
+                        <i class="fas fa-phone-slash text-3xl mb-2 opacity-50"></i>
+                        <p class="text-sm">No calls made yet</p>
+                    </div>
+                `;
+            } else {
+                historyList.innerHTML = callHistory.map(call => `
+                    <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                        <div>
+                            <p class="font-medium text-gray-800">${call.service}</p>
+                            <p class="text-sm text-gray-600">${call.number}</p>
+                        </div>
+                        <span class="text-xs text-gray-500">${call.time}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle heart button clicks
+            document.querySelectorAll('.heart-btn').forEach(heart => {
+                heart.addEventListener('click', function () {
+                    const service = this.getAttribute('data-service');
+
+                    // Toggle heart visual state
+                    this.classList.toggle('far');
+                    this.classList.toggle('fas');
+                    this.classList.toggle('text-gray-400');
+                    this.classList.toggle('text-red-500');
+
+                    // Increase heart count
+                    if (this.classList.contains('fas')) {
+                        heartCount++;
+                    } else {
+                        heartCount = Math.max(0, heartCount - 1);
+                    }
+
+                    updateCounters();
+                });
+            });
+
+            // Handle copy buttons
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const phoneNumber = this.getAttribute('data-number');
+
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(phoneNumber).then(() => {
+                        // Visual feedback
+                        const originalHTML = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+                        this.classList.add('bg-green-100', 'text-green-600');
+
+                        setTimeout(() => {
+                            this.innerHTML = originalHTML;
+                            this.classList.remove('bg-green-100', 'text-green-600');
+                        }, 2000);
+
+                        // Increase copy count
+                        copyCount++;
+                        updateCounters();
+                    }).catch(err => {
+                        alert('Failed to copy number');
+                    });
+                });
+            });
+
+            // Handle call buttons
+            document.querySelectorAll('.call-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const service = this.getAttribute('data-service');
+                    const number = this.getAttribute('data-number');
+
+                    // Check if user has enough coins
+                    if (coinCount < 20) {
+                        alert('❌ Insufficient coins! You need at least 20 coins to make a call. Current balance: ' + coinCount + ' coins.');
+                        return;
+                    }
+
+                    // Show call alert
+                    if (confirm(`📞 Calling ${service}\nNumber: ${number}\n\nThis will cost 20 coins. Continue?`)) {
+                        // Deduct coins
+                        coinCount -= 20;
+                        updateCounters();
+
+                        // Add to call history
+                        callHistory.unshift({
+                            service: service,
+                            number: number,
+                            time: getCurrentTime()
+                        });
+                        updateCallHistory();
+
+                        // Show success alert
+                        alert(`✅ Successfully called ${service} (${number})\n\n💰 20 coins deducted\n💰 Remaining balance: ${coinCount} coins`);
+
+                        // Simulate actual call (this would open the phone dialer on mobile)
+                        // window.location.href = `tel:${number}`;
+                    }
+                });
+            });
+
+            // Handle clear history button
+            document.getElementById('clearHistoryBtn').addEventListener('click', function () {
+                if (confirm('Are you sure you want to clear all call history?')) {
+                    callHistory = [];
+                    updateCallHistory();
+                    alert('✅ Call history cleared successfully!');
+                }
+            });
+
+            // Initialize display
+            updateCounters();
+            updateCallHistory();
+        });
     </script>
+
 </body>
+
+
 
 </html>
