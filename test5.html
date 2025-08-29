@@ -585,15 +585,8 @@
 
                     // Copy to clipboard
                     navigator.clipboard.writeText(phoneNumber).then(() => {
-                        // Visual feedback
-                        const originalHTML = this.innerHTML;
-                        this.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
-                        this.classList.add('bg-green-100', 'text-green-600');
-
-                        setTimeout(() => {
-                            this.innerHTML = originalHTML;
-                            this.classList.remove('bg-green-100', 'text-green-600');
-                        }, 2000);
+                        // Show alert message in Bengali
+                        alert(`নম্বর কপি হয়েছে: ${phoneNumber}`);
 
                         // Increase copy count
                         copyCount++;
